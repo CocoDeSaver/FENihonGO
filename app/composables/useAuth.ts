@@ -1,34 +1,45 @@
-type AuthUser = {
+export type AuthUser = {
   id: number
   name: string
   email: string
   role: 'admin' | 'user'
 }
 
+type LoginPayload = {
+  email: string
+  password: string
+}
+
 export const useAuth = () => {
   const user = useState<AuthUser | null>('auth-user', () => null)
 
-  const login = async (payload: {
-  email: string
-  password: string
-  }) => {
+  const token = useCookie<string | null>('token', {
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  })
+
+  const isLoggedIn = computed(() => !!user.value && !!token.value)
+
+  /**
+   * LOGIN
+   */
+  const login = async (payload: LoginPayload) => {
     const api = useApi()
 
-    const res: any = await api('/login', {
+    const res = await api<{
+      data: {
+        user: AuthUser
+        access_token: string
+        token_type: string
+      }
+    }>('/login', {
       method: 'POST',
       body: payload,
     })
 
-    const token = res.data?.access_token
-    const loggedUser = res.data?.user
+    const { user: loggedUser, access_token } = res.data
 
-    if (!token || !loggedUser) {
-      throw new Error('Login response tidak valid')
-    }
-
-    const authToken = useCookie('token')
-    authToken.value = token
-
+    token.value = access_token
     user.value = loggedUser
 
     await navigateTo(
@@ -38,33 +49,31 @@ export const useAuth = () => {
     )
   }
 
-
-  const register = async (payload: {
-    name: string
-    email: string
-    password: string
-    password_confirmation: string
-  }) => {
+  /**
+   * LOGOUT (wajib hit API)
+   */
+  const logout = async () => {
     const api = useApi()
 
-    await api('/register', {
-      method: 'POST',
-      body: payload,
-    })
-
-    await login({
-      email: payload.email,
-      password: payload.password,
-    })
-  }
-
-  const logout = () => {
-    if (process.client) {
-      localStorage.removeItem('token')
+    try {
+      await api('/logout', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      })
+    } finally {
+      token.value = null
+      user.value = null
+      navigateTo('/login')
     }
-    user.value = null
-    navigateTo('/login')
   }
 
-  return { user, login, register, logout }
+  return {
+    user,
+    token,
+    isLoggedIn,
+    login,
+    logout,
+  }
 }

@@ -136,4 +136,5 @@
 
 <script setup>
 const kanji = ['火', '日', '学', '後']
+
 </script>
