@@ -2,11 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss'],
   runtimeConfig: {
     public: {
       backendUrl: process.env.NUXT_PUBLIC_BACKEND_URL,
-      apiUrl: process.env.NUXT_PUBLIC_API_URL,
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_URL,
     },
   },
 })
