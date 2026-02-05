@@ -29,7 +29,6 @@
 </template>
 
 <script setup lang="ts">
-const { user } = useAuth() // masih dipakai kalau mau role / name
 const { profile } = useUser()
 watch(profile, () => {
   console.log('PROFILE DI NAVBAR:', profile.value)

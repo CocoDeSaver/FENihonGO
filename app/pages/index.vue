@@ -58,24 +58,28 @@
 
         <!-- CTA -->
         <div class="flex flex-wrap gap-4 mt-10">
-          <button
-            class="flex items-center gap-2 px-6 py-3 rounded-xl
-                   bg-gradient-to-r from-[#E81509] to-[#320001]
-                   text-white font-semibold shadow-lg
-                   hover:opacity-90 transition"
-          >
-            Main Course
-          </button>
+         <NuxtLink to="/maincourse">
+           <button
+             class="flex items-center gap-2 px-6 py-3 rounded-xl
+                    bg-gradient-to-r from-[#E81509] to-[#320001]
+                    text-white font-semibold shadow-lg
+                    hover:opacity-90 transition"
+           >
+             Main Course
+           </button>
+         </NuxtLink>
 
-          <button
-            class="flex items-center gap-2 px-6 py-3 rounded-xl
-                   border-2 border-[#E81509]
-                   text-[#E81509]
-                   hover:bg-[#E81509] hover:text-white
-                   font-semibold transition"
-          >
-            Mini Games
-          </button>
+          <NuxtLink to="/minigames">
+            <button
+              class="flex items-center gap-2 px-6 py-3 rounded-xl
+                     border-2 border-[#E81509]
+                     text-[#E81509]
+                     hover:bg-[#E81509] hover:text-white
+                     font-semibold transition"
+            >
+              Mini Games
+            </button>
+          </NuxtLink>
         </div>
       </div>
 
