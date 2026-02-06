@@ -5,8 +5,8 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss'],
   runtimeConfig: {
     public: {
-      backendUrl: process.env.NUXT_PUBLIC_BACKEND_URL,
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_URL,
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+      assetBaseUrl: process.env.NUXT_PUBLIC_ASSET_BASE_URL,
     },
   },
 })

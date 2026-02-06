@@ -5,12 +5,14 @@
 </template>
 
 <script setup lang="ts">
-const { isLoggedIn } = useAuth()
-const { fetchProfile } = useUser()
+const auth = useAuth()
+const user = useUser()
 
-watchEffect(async () => {
-  if (isLoggedIn.value) {
-    await fetchProfile()
+onMounted(async () => {
+  await auth.initAuth()
+
+  if (auth.isLoggedIn.value) {
+    await user.fetchProfile()
   }
 })
 </script>

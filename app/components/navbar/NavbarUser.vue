@@ -4,7 +4,7 @@
     <!-- Level -->
     <div
       v-if="profile?.gamification"
-      class="rounded bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700"
+      class="rounded bg-orange-100 px-3 py-1 text-sm font-semibold text-yellow-700"
     >
       ⭐ Lv {{ profile.gamification.level }}
     </div>
@@ -12,9 +12,9 @@
     <!-- Gold / Ticket -->
     <div
       v-if="profile?.gamification"
-      class="rounded bg-purple-100 px-3 py-1 text-sm font-semibold text-purple-700"
+      class="rounded bg-yellow-100 px-3 py-1 text-sm font-semibold text-purple-700"
     >
-      🎟 {{ profile.gamification.gold }}
+      🟡 {{ profile.gamification.gold }}
     </div>
 
     <!-- Avatar -->
@@ -33,4 +33,14 @@ const { profile } = useUser()
 watch(profile, () => {
   console.log('PROFILE DI NAVBAR:', profile.value)
 })
+const { user, fetchUser } = useAuth()
+
+onMounted(() => {
+  
+  if (!user.value) {
+    fetchUser()
+  }
+})
+
+
 </script>

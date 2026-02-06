@@ -16,7 +16,7 @@ export const useUser = () => {
   const fetchProfile = async () => {
     const api = useApi()
 
-    const res = await api<{ data: UserProfile }>('/user')
+    const res = await api<{ data: UserProfile }>('/profile')
     profile.value = res.data
   }
 
@@ -25,3 +25,5 @@ export const useUser = () => {
     fetchProfile,
   }
 }
+
+

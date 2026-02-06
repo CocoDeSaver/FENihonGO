@@ -1,11 +1,11 @@
 export default defineNuxtRouteMiddleware(() => {
-  const user = useState<any>('auth-user')
+  const auth = useAuth()
 
-  if (!user.value) {
+  if (!auth.user.value) {
     return navigateTo('/login')
   }
 
-  if (user.value.role !== 'admin') {
+  if (auth.user.value.role !== 'admin') {
     return navigateTo('/403')
   }
 })

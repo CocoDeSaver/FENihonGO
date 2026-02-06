@@ -1,9 +1,4 @@
-export type AuthUser = {
-  id: number
-  name: string
-  email: string
-  role: 'admin' | 'user'
-}
+import type { AuthUser } from '~/types/user'
 
 type LoginPayload = {
   email: string
@@ -26,15 +21,25 @@ export const useAuth = () => {
     path: '/',
   })
 
-  console.log('[useAuth] INIT', {
-    token: token.value,
-    user: user.value,
-    isLoggedIn: !!token.value && !!user.value,
-    isClient: process.client,
-    isServer: process.server,
-  })
+  const isLoggedIn = computed(() => !!token.value && !!user.value)
 
-  const isLoggedIn = computed(() => !!user.value && !!token.value)
+  /**
+   * FETCH CURRENT USER (SINGLE SOURCE)
+   */
+  const fetchUser = async () => {
+    if (!token.value) return null
+
+    try {
+      const api = useApi()
+      const res = await api<{ data: AuthUser }>('/user')
+      user.value = res.data
+      return user.value
+    } catch (e) {
+      token.value = null
+      user.value = null
+      return null
+    }
+  }
 
   /**
    * LOGIN
@@ -46,20 +51,17 @@ export const useAuth = () => {
       data: {
         user: AuthUser
         access_token: string
-        token_type: string
       }
     }>('/login', {
       method: 'POST',
       body: payload,
     })
 
-    const { user: loggedUser, access_token } = res.data
-
-    token.value = access_token
-    user.value = loggedUser
+    token.value = res.data.access_token
+    user.value = res.data.user
 
     await navigateTo(
-      loggedUser.role === 'admin'
+      user.value?.role === 'admin'
         ? '/admin/admindashboard'
         : '/'
     )
@@ -75,55 +77,54 @@ export const useAuth = () => {
       data: {
         user: AuthUser
         access_token: string
-        token_type: string
       }
     }>('/register', {
       method: 'POST',
       body: payload,
     })
 
-    const { user: registeredUser, access_token } = res.data
+    token.value = res.data.access_token
+    user.value = res.data.user
 
-    // simpan token & user (auto login setelah register)
-    token.value = access_token
-    user.value = registeredUser
-
+    await fetchUser()
     await navigateTo('/')
   }
 
-  /**
-   * LOGOUT
-   */
-  const logout = async () => {
-    const api = useApi()
-
-    try {
-      await api('/logout', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-        },
-      })
-    } finally {
-      token.value = null
-      user.value = null
-      navigateTo('/login')
-    }
+ /**
+ * LOGOUT
+ */
+const logout = async () => {
+  if (!token.value) {
+    user.value = null
+    return navigateTo('/login')
   }
-
-  const initAuth = async () => {
-  if (!token.value || user.value) return
 
   try {
     const api = useApi()
-    const res = await api<{ data: AuthUser }>('/me')
-    user.value = res.data
+
+    await api('/logout', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
   } catch (e) {
+    // optional: console.error('Logout failed', e)
+  } finally {
+    // WAJIB bersih, apapun hasil API
     token.value = null
     user.value = null
+    navigateTo('/login')
   }
 }
 
+  /**
+   * INIT (dipanggil dari app.vue / middleware)
+   */
+  const initAuth = async () => {
+    if (user.value || !token.value) return
+    await fetchUser()
+  }
 
   return {
     user,
@@ -133,5 +134,6 @@ export const useAuth = () => {
     register,
     logout,
     initAuth,
+    fetchUser,
   }
 }
