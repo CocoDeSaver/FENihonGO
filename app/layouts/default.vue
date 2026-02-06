@@ -1,6 +1,12 @@
 <template>
-  <Navbar />
-  <main>
-    <NuxtPage />
-  </main>
+  <div>
+    <Navbar />
+
+    <!-- GLOBAL POMODORO -->
+    <PomodoroFloating />
+
+    <main>
+      <slot />
+    </main>
+  </div>
 </template>
