@@ -3,14 +3,14 @@ export const useCourse = () => {
 
   const stages = ref<any[]>([])
   const flashcards = ref<any[]>([])
-  const selectedStageId = ref<number | null>(null)
   const loading = ref(false)
 
   const fetchStages = async () => {
     loading.value = true
     try {
       const res = await api<{ data: any[] }>('/stages')
-      stages.value = res.data ?? []   // ✅ PENTING
+      stages.value = res.data ?? []
+      return stages.value
     } finally {
       loading.value = false
     }
@@ -18,10 +18,12 @@ export const useCourse = () => {
 
   const fetchFlashcards = async (stageId: number) => {
     loading.value = true
-    selectedStageId.value = stageId
     try {
-      const res = await api<{ data: any[] }>(`/flashcards?stage_id=${stageId}`)
-      flashcards.value = res.data ?? []  // ✅ PENTING
+      const res = await api<{ data: any[] }>(
+        `/flashcards?stage_id=${stageId}`
+      )
+      flashcards.value = res.data ?? []
+      return flashcards.value
     } finally {
       loading.value = false
     }
@@ -30,7 +32,6 @@ export const useCourse = () => {
   return {
     stages,
     flashcards,
-    selectedStageId,
     loading,
     fetchStages,
     fetchFlashcards

@@ -1,12 +1,10 @@
 <template>
   <div>
     <Navbar />
-
-    <!-- GLOBAL POMODORO -->
     <PomodoroFloating />
-
     <main>
       <slot />
     </main>
+    <Footer />
   </div>
 </template>

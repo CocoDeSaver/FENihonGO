@@ -12,7 +12,6 @@ watchEffect(() => {
 
 <template>
   <div class="fixed bottom-6 right-6 z-50">
-    <!-- Button -->
     <button
       v-show="!open"
       class="bg-red-600 text-white px-4 py-2 rounded-full shadow"
@@ -21,7 +20,6 @@ watchEffect(() => {
       Pomodoro
     </button>
 
-    <!-- Card (NOT UNMOUNTED) -->
     <div v-show="open">
       <PomodoroCard />
       <button
