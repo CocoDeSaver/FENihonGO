@@ -57,7 +57,7 @@
 
         <ul class="space-y-3 text-gray-600">
           <li><NuxtLink to="/" class="hover:text-[#E81509] transition">Home</NuxtLink></li>
-          <li><NuxtLink to="/courses" class="hover:text-[#E81509] transition">Courses</NuxtLink></li>
+          <li><NuxtLink to="/maincourse" class="hover:text-[#E81509] transition">Courses</NuxtLink></li>
           <li><NuxtLink to="/minigames" class="hover:text-[#E81509] transition">Mini Games</NuxtLink></li>
           <li><NuxtLink to="/leaderboard" class="hover:text-[#E81509] transition">Leaderboard</NuxtLink></li>
         </ul>

@@ -57,6 +57,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: ['auth', 'onboarding']
+})
+
 const steps = [
   {
     no: '01',
